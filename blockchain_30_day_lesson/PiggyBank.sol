@@ -11,7 +11,7 @@ contract PiggyBank {
     receive() external payalbe {} // for receiving ether from EOA
 
     function getMyBalance() public view returns (uint256) {
-        return address(this).balace; // return the balance of the contract
+        return address(this).balance; // return the balance of the contract
     }
 
     function withdraw() public {
