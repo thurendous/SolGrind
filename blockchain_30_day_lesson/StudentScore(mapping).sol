@@ -1,24 +1,41 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ~0.7.1;
+// SPDX-Licence-Identifier: MIT
 
-contract StudentScore {
-    mapping(string => uint256) scores;
-    string[] public names; // use this string array to save the info about the keys. or not we cannot know about the mapping info
+pragma solidity ^0.7.0;
 
-    function addScore(string memory name, uint256 score) public {
-        scores[name] = score;
+contract school {
+    struct Class {
+        string teacher;
+        mapping(string => uint256) scores;
     }
 
-    function getScore(string memory name) public returns (uint256 score) {
-        score = scores[name];
-        names.push(name);
+    mapping(string => Class) classes; // class name => Class struct
+
+    function addClass(string calldata className, string calldata teacher)
+        public
+    {
+        // classes[className] = Class[teacher];  -> this is the wrong way.
+        Class storage class = classes[className]; // struct is like a class you need to instantiate it.
+        class.teacher = teacher;
     }
 
-    function clearScores() public returns (bool) {
-        while (names.length > 0) {
-            delete scores[names[names.length - 1]];
-            names.pop();
-        }
-        return true;
+    function addStudentScore(
+        string calldata className,
+        string calldata studentName,
+        uint256 score
+    ) public {
+        // (classes[calssName]).scores[studentName] = score; same as below
+
+        Class storage class = classes[className]; // create a reference data
+        class.scores[studentName] = score;
+    }
+
+    function getStudentScore(
+        string calldata className,
+        string calldata studentName
+    ) public view returns (uint256 score) {
+        // return (classes[className]).scores[studentName]; same as below
+
+        Class storage class = classes[className]; // create a reference data
+        return class.scores[studentName];
     }
 }
